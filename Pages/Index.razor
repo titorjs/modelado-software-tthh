@@ -1,0 +1,127 @@
+﻿@page "/"
+@using Interfaz_Login.Data
+@using Interfaz_Login.Models
+@inject NavigationManager NavigationManager
+@inject ILogger<Index> Logger
+@inject ApiService ApiService
+
+@code {
+    public List<Emisor> emisors = new List<Emisor>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        emisors = await ApiService.emisors();
+        // Emisor a1 = new Emisor
+        // {
+        //     Codigo = 12,
+        //     NombreEmisor = "dsfj",
+        //     Ruc = "fajdk"
+        // };
+        // Emisor a2 = new Emisor
+        //     {
+        //         Codigo = 12,
+        //         NombreEmisor = "dsfj",
+        //         Ruc = "fajdk"
+        //     };
+        // Emisor a3 = new Emisor
+        //     {
+        //         Codigo = 12,
+        //         NombreEmisor = "dsfj",
+        //         Ruc = "fajdk"
+        //     };
+        // emisors.Add(a1);
+        // emisors.Add(a2);
+        // emisors.Add(a3);
+    }
+}
+
+
+<style>
+    body {
+        background-color: darkslategrey; /* Negro */
+        color: #fff; /* Color del texto */
+        margin: 0; /* Eliminar márgenes predeterminados del cuerpo */
+        font-family: Arial, sans-serif; /* Establecer la fuente del texto */
+    }
+
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .login-container {
+        text-align: center;
+        padding: 60px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        color: #000; /* Color del texto dentro del recuadro */
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        appearance: none; /* Eliminar la apariencia predeterminada del combobox */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+        color: #000; /* Color del texto dentro del combobox */
+    }
+
+        .form-control::after {
+            content: '\25BC'; /* Código de la flecha hacia abajo */
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none; /* Evitar que la flecha sea clickeable */
+        }
+
+    .btn-ingresar {
+        background-color: sandybrown;
+        color: #000; /* Color del texto del botón */
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+</style>
+
+<div class="login-wrapper">
+    <div class="login-container">
+        <h1>Iniciar Sesión</h1>
+
+        <div class="form-group">
+            <label for="usuario">Usuario:</label>
+            <input type="text" id="usuario" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="contrasena">Contraseña:</label>
+            <input type="password" id="contrasena" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="empresas">Empresas:</label>
+            <select id="empresas" class="form-control">
+                @foreach (Emisor e in emisors)
+                {
+                    <option value="@e.Codigo">@e.Codigo : @e.NombreEmisor</option>
+                }
+            </select>
+        </div>
+
+        <NavLink href="/Counter" class="btn-ingresar"  >Ingresar</NavLink>
+    </div>
+</div>
