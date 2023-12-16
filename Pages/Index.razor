@@ -1,37 +1,40 @@
 ﻿@page "/"
 @using Interfaz_Login.Data
 @using Interfaz_Login.Models
+@inject IJSRuntime JsRuntime
 @inject NavigationManager NavigationManager
 @inject ILogger<Index> Logger
 @inject ApiService ApiService
+@inject UsuarioService usuarioGlobal
 
 @code {
-    public List<Emisor> emisors = new List<Emisor>();
+    private List<Emisor> emisors = new List<Emisor>();
+    private int usuario;
+    private string contrasenia;
+    private string empresa;
 
     protected override async Task OnInitializedAsync()
     {
         emisors = await ApiService.emisors();
-        // Emisor a1 = new Emisor
-        // {
-        //     Codigo = 12,
-        //     NombreEmisor = "dsfj",
-        //     Ruc = "fajdk"
-        // };
-        // Emisor a2 = new Emisor
-        //     {
-        //         Codigo = 12,
-        //         NombreEmisor = "dsfj",
-        //         Ruc = "fajdk"
-        //     };
-        // Emisor a3 = new Emisor
-        //     {
-        //         Codigo = 12,
-        //         NombreEmisor = "dsfj",
-        //         Ruc = "fajdk"
-        //     };
-        // emisors.Add(a1);
-        // emisors.Add(a2);
-        // emisors.Add(a3);
+    }
+
+    private async Task login()
+    {
+        if(contrasenia == null || usuario == null)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Completa correctamente todos los campos");
+            return;
+        }
+
+        Usuario login = await ApiService.login(usuario, contrasenia);
+        if (login == null || login.OBSERVACION != "INGRESO EXITOSO")
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Contraseña o usuario incorrectos");
+            return;
+        }
+
+        usuarioGlobal.usuario = login;
+        NavigationManager.NavigateTo("/Home");
     }
 }
 
@@ -104,17 +107,17 @@
 
         <div class="form-group">
             <label for="usuario">Usuario:</label>
-            <input type="text" id="usuario" class="form-control" />
+            <input type="text" id="usuario" @bind="usuario" class="form-control" />
         </div>
 
         <div class="form-group">
             <label for="contrasena">Contraseña:</label>
-            <input type="password" id="contrasena" class="form-control" />
+            <input type="password" id="contrasena" @bind="contrasenia" class="form-control" />
         </div>
 
         <div class="form-group">
             <label for="empresas">Empresas:</label>
-            <select id="empresas" class="form-control">
+            <select id="empresas" class="form-control" @bind="empresa">
                 @foreach (Emisor e in emisors)
                 {
                     <option value="@e.Codigo">@e.Codigo : @e.NombreEmisor</option>
@@ -122,6 +125,6 @@
             </select>
         </div>
 
-        <NavLink href="/Counter" class="btn-ingresar"  >Ingresar</NavLink>
+        <button @onclick="login" class="btn-ingresar">Ingresar</button>
     </div>
 </div>

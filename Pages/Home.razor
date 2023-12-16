@@ -1,0 +1,18 @@
+﻿@page "/Home"
+@using Interfaz_Login.Data
+@inject UsuarioService usuarioGlobal
+
+<h1>BIENVENIDO @usuarioGlobal.usuario.NOMBREUSUARIO</h1>
+<h2>SUS DATOS</h2>
+<p>
+    NOMBRE USUARIO: @usuarioGlobal.usuario.NOMBREUSUARIO
+    RUC USUARIO: @usuarioGlobal.usuario.RucUsuario
+    PERFIL: @usuarioGlobal.usuario.PERFIL
+    NOMBRE EMISOR: @usuarioGlobal.usuario.NOMBREEMISOR
+    NOMBRE COMPANIA: @usuarioGlobal.usuario.NOMBRECOMPANIA
+    USUARIO CLIENTE: @usuarioGlobal.usuario.USUARIOCLIENTE
+</p>
+
+@code {
+
+}
